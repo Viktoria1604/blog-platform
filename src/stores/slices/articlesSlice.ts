@@ -4,8 +4,11 @@ interface articlesListState {
   currentPage: number;
 }
 
+const currentPageString = localStorage.getItem('currentPage');
+const currentPage = currentPageString ? JSON.parse(currentPageString) : 1;
+
 const initialState: articlesListState = {
-  currentPage: 1,
+  currentPage: currentPage,
 };
 
 const articlesListSlice = createSlice({
@@ -14,6 +17,7 @@ const articlesListSlice = createSlice({
   reducers: {
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
+      localStorage.setItem('currentPage', JSON.stringify(action.payload));
     },
   },
 });

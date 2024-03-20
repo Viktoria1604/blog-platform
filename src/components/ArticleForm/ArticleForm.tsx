@@ -36,6 +36,8 @@ interface IFormInput {
   description: string;
   text: string;
   tags: ITags[];
+  addTag: string;
+  fieldName: string;
 }
 
 const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
@@ -66,6 +68,9 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
   const { fields, append, remove } = useFieldArray({
     name: 'tags',
     control,
+    rules: {
+      required: 'Field is required',
+    }
   });
 
   useEffect(() => {
@@ -128,6 +133,10 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
             register={register}
             validateParams={{
               required: 'Field is required',
+              pattern: {
+                value: /[^\s]/,
+                message: 'Title is not valid',
+              },
             }}
             errors={errors.title}
           />
@@ -142,6 +151,10 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
             register={register}
             validateParams={{
               required: 'Field is required',
+              pattern: {
+                value: /[^\s]/,
+                message: 'Description is not valid',
+              },
             }}
             errors={errors.description}
           />
@@ -152,7 +165,10 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
           <textarea
             placeholder="Text"
             className={!errors.text ? style.textarea : [style.textarea, style.input_error].join(' ')}
-            {...register('text', { required: 'Field is required' })}
+            {...register('text', { required: 'Field is required', pattern: {
+              value: /[^\s]/,
+              message: 'Text is not valid',
+            }, })}
           />
           {showInputErrors(errors.text?.types)}
         </label>
@@ -162,12 +178,19 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
             <ul className={style.tags_list}>
               {fields.map((field, index) => {
                 return (
-                  <div className={style.add_tag_block} key={index}>
+                  <div className={style.add_tag_block} key={field.id}>
                     <Input
                       inputType="text"
                       inputPlaceholder="Tag"
                       register={register}
-                      inputName={`tags.${index}.value`}
+                      inputName={`tags[${index}].value`}
+                      validateParams={{
+                        required: 'Field is required',
+                        pattern: {
+                          value: /[^\s]/,
+                          message: 'Tag is not valid',
+                        },
+                      }}
                     />
                     <button
                       className={style.delete_tag_btn}
@@ -184,13 +207,25 @@ const ArticleForm = ({ data, isEditing }: IArticleFormProps) => {
               })}
             </ul>
             <div className={style.add_tag_block}>
+              <div className={style.add_tag_block_with_error}>
               <Input
                 inputType="text"
                 inputName="addTag"
                 inputPlaceholder="Tag"
                 value={addTagInputValue}
                 onChange={(value) => setAddTagInputValue(value)}
+                register={register}
+                validateParams={{
+                  required: 'Field is required',
+                  pattern: {
+                    value: /[^\s]/,
+                    message: 'Tag is not valid',
+                  },
+                }}
+                errors={errors.addTag}
               />
+              {showInputErrors(errors.addTag?.types)}
+              </div>
               <button
                 className={style.add_tag_btn}
                 onClick={(e) => {

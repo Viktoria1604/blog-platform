@@ -7,7 +7,7 @@ import SingleArticlePage from '../../pages/SingleArticlePage/SingleArticlePage';
 import SignUpPage from '../../pages/SignUpPage/SignUpPage';
 import SignInPage from '../../pages/SignInPage/SignInPage';
 import EditProfilePage from '../../pages/EditProfilePage/EditProfilePage';
-import CreateArticlePage from '../../pages/CreateArticlePage/CreateArticlePage';
+import ArticleForm from '../ArticleForm/ArticleForm';
 import EditArticlePage from '../../pages/EditArticlePage/EditArticlePage';
 import RequireAuth from '../../hoc/RequireAuth';
 
@@ -34,7 +34,7 @@ const App = () => {
           path="/new-article"
           element={
             <RequireAuth>
-              <CreateArticlePage />
+              <ArticleForm />
             </RequireAuth>
           }
         />
